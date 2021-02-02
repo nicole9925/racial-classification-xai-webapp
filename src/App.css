@@ -1,0 +1,103 @@
+/* || DEFINE VARIABLES */
+:root {
+  --navy: #111B27;
+  --grey: #2A323F;
+
+  --radius: 20px;
+
+  --font: 'Open Sans', sans-serif;
+}
+
+/* || TYPOGRAPHY */
+
+html {
+  background: var(--navy);
+  font-family: var(--font);
+}
+
+/* || GENERAL STYLES */
+h2 {
+  color: white;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+h3 {
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.box {
+  background-color: var(--grey);
+  border-radius: var(--radius);
+}
+/* || STATIC ENTITIES */
+
+.header {
+  padding-bottom: 50px;
+}
+
+body {
+  margin: 0;
+}
+
+.page-title {
+  margin-left: 3%;
+  padding: 1%;
+}
+
+footer {
+  background-color: var(--grey);
+  height: 2rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+/* || MAIN BODY */
+.main-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.info-widget {
+  height: 20rem;
+  width: 31rem;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: row;
+  width: 500px;
+  justify-content: space-between;
+}
+
+.stats-widget1 {
+  height: 19rem;
+  width: 15rem;
+}
+
+.stats-widget2 {
+  height: 19rem;
+  width: 15rem;
+}
+
+.image-upload-widget {
+  height: 40rem;
+  width: 31rem;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+

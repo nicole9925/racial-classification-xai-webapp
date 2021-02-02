@@ -1,0 +1,13 @@
+.header-container {
+    background-color: var(--grey);
+    height: 3rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+.title-container {
+    margin-left: 0.5rem;
+}
