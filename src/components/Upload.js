@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import ImageUploader from 'react-images-upload'
-// import Axios from 'axios'
+import UploadService from './UploadService'
 
 const UploadComponent = props => (
     <form>
@@ -12,7 +12,7 @@ const UploadComponent = props => (
             buttonText="Choose file"
             onChange={props.onImage}
             imgExtension={['.jpg', '.png', '.jpeg']}
-            maxFileSize={52428}
+            maxFileSize={104856}
             withPreview={true}
             fileContainerStyle={{backgroundColor: '#2A323F', color: '#ffffff'}}
             buttonStyles = {{backgroundColor: '#4C6074'}}
@@ -29,15 +29,17 @@ const Upload = () => {
         setProgress('Uploading')
         try {
             const parts = successImages[0].split(';');
-            // const mime = parts[0].split(':')[1];
             const name = parts[1].split('=')[1];
-            // const data = parts[2];
-            
-            // backend needed
-            // const res = await Axios.post('link/to/api', { mime, name, image: data });
-            setImageUrl(name);
+            const type = parts[0].split(':')[1]
 
-            setProgress('Uploaded')
+            UploadService.upload(successImages, type)
+            .then(async () => {
+                setImageUrl(`http://localhost:3000/${name}`);
+                setProgress('Uploaded')
+            })
+            .catch((err) => {
+                console.log(err)
+            })
         } catch(error) {
             setErrorMessage(error.message);
             console.log(failedImages)
@@ -54,7 +56,6 @@ const Upload = () => {
             case 'Uploaded':
                 return (
                 <>
-                    {/* <img src={url} alt='uploaded'></img> */}
                     <UploadComponent onImage={onImage} url={url}/>
                 </>
                 )

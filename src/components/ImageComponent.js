@@ -51,6 +51,15 @@ const ImageComponent = (props) => {
                     // showImage()
                     <div>Image</div>
                 )
+            default:
+                return (
+                    <>
+                    <div className="upload-container">
+                        <Upload></Upload>
+                        <button className="submit" onClick={submit}>Submit</button>
+                    </div>
+                    </>
+                )
         }
     }
     return (

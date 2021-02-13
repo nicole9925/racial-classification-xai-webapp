@@ -1,5 +1,4 @@
 import './App.css';
-import Upload from './components/Upload';
 import Header from './components/Header'
 import ImageComponent from './components/ImageComponent'
 
