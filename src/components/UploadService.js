@@ -1,21 +1,24 @@
-import axios from "axios";
-
 class UploadService {
-  async upload(img, type) {
-    let imgData = new FormData();
+  async UploadToServer(img, name) {
 
-    const parts = img[0].split(';');
-    const name = parts[1].split('=')[1];
+    const data = new FormData();
 
-    imgData.append("img", img);
-    axios('/api/', imgData).then((res) => {
-        console.log(res)
-        return res
-    }, (error) => {
-      console.log(error)
+    const parts = img[0].split(';')
+
+    data.append('file', parts[2].split(",")[1]);
+    data.append('filename', name);
+    
+    let response = await fetch('/', {
+      method: 'POST',
+      body: data
     })
-  }
+    let resp_data = await response.json()
+    return resp_data
 
+
+
+  }
+ 
   // getImages() {
   //   return http.get("/img");
   // }
