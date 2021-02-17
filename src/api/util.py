@@ -19,6 +19,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
+import io
 
 
 """
@@ -78,70 +79,6 @@ def create_generator(csv_path, image_path, target, size, batch_size, mapping_pat
     
     return data_generator
     
-
-"""
-Function to re-organize the dataset
-input
-    save_path: The new directory to save all the dataset
-    train_csv_path, valid_csv_path, train_image_path, valid_image_path are self-explanatory
-    target: the category to reorganized, such as age, gender, or raace
-    
-output will look similar to this(e.g. using gender):
-    save_path
-        train
-            male
-                images
-                ...
-            female
-                images
-                ...
-        validation
-            male
-                images
-                ...
-            female
-                images
-                ...
-"""
-def create_dataset(save_path, train_csv_path, valid_csv_path, train_image_path, valid_image_path, target):
-    if not os.path.exists(save_path):
-        os.mkdir(save_path)
-        print("created dircetory: {}".format(save_path))
-        
-    else:
-        print("dataset {} already exist!".format(save_path))
-        return
-        #shutil.rmtree(save_path)
-
-        
-    csv_path = [train_csv_path, valid_csv_path]
-    image_path = [train_image_path, valid_image_path]
-    names = ["train", "validation"]
-    
-    for i in range(len(csv_path)):
-        df = pd.read_csv(csv_path[i])
-        df["file"] = df["file"].apply(lambda x: os.path.join(image_path[i], x.split("/")[1]))
-        grp_df = df.groupby(target)
-        grps = grp_df.groups.keys()
-        
-        sub_dir = os.path.join(save_path, names[i])
-        os.mkdir(sub_dir)
-        print("created sub-directory: {}".format(sub_dir))
-        
-        for grp in grps:
-            grp_dir = os.path.join(sub_dir, grp)
-            os.mkdir(grp_dir)
-            original_file_path = grp_df.get_group(grp)["file"]
-            func = lambda x: os.path.join(grp_dir, x.split("/")[-1])
-            new_file_path = original_file_path.apply(func).values
-            original_file_path = original_file_path.values
-            print("created category-directory: {}".format(grp_dir))
-            
-            for j in range(len(new_file_path)):
-                img = PIL.Image.open(original_file_path[j])
-                img.save(new_file_path[j])
-    
-    print("Finished!")
 
 """
 function to visualize the training progress
@@ -220,7 +157,8 @@ def create_stats(model, generator, target, label_path, mapping_path, save_path):
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
     acc = cm.diagonal()
     result_df["accuracy"] = acc
-    
+    result_df.to_csv(os.path.join(save_path, "result_df.csv"), index = False)
+
     stat_names = ["precision", "recall", "f1-score", "accuracy", "support"]
     
     for name in stat_names:
@@ -232,22 +170,77 @@ def create_stats(model, generator, target, label_path, mapping_path, save_path):
         plt.xlabel(target, fontsize = 16)
         plt.ylabel(name, fontsize= 16)
         plt.savefig(save_dir)  
-        
+
 """
-Function to use the integrated_gradient to visualize the image
+function to get the prediction from the model
+input
+    img_path: The path to the image
+    model_path: The path to the model
+    mapping_path: The mapping
+out
+    The prediction made by the model
+"""
+
+"""
+function to make a single prediction of an image
+input
+    img_path: The path to the image
+    model_path: The path to the model
+    mapping_path: The mapping between labels(in number) and categories
+    result_df_path: The aggregate results
+output
+    out: The prediction
+    pred_prob: The accuracy of making the out prediction
+    aggregate_acc: The accuracy of the aggregate category
+
+***NOTE: result_df_path can be found in(assuming race):
+    "./visualization/race/stats/result_df.csv"
+"""
+def get_prediction(img_path, model_path, mapping_path, result_df_path):
+    img_arr = detect_face(img_path)
+    if img_arr.shape != (1, 224,224,3):
+        print("Wrong input size")
+        return
+    else:
+        model = keras.models.load_model(model_path)
+        
+        with open(mapping_path) as f:
+            mapping = json.load(f)
+        f.close()
+        mapping = {val:key for key, val in mapping.items()}
+        pred = model.predict(img_arr).squeeze()
+        out = mapping[pred.argmax()]
+        pred_prob = np.round(pred[pred.argmax()] * 100, 4)
+        
+        result_df = pd.read_csv(result_df_path)
+        aggregate_acc = np.round(result_df[result_df["category"] == out]["accuracy"].values[0] * 100, 4)
+    
+    return out, pred_prob, aggregate_acc
+
+"""
+Convert a Matplotlib figure to a PIL Image and return it
+"""
+def fig2img(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf)
+    buf.seek(0)
+    img = Image.open(buf)
+    return img
+
+"""
+Function similar to integrated_grad_pic but just do it on one image
+
+modification: the returned output is an image. This function no longer save the image into jpg.
+
 in: 
     model_param_path: saved model in .hdf5 format
-    train_image_path: The image_path
-    train_label_path: The label_path in .csv format
-    save_path: path to save the image
-    img_idx: The index of the image
-
+    mapping: The dictionary object of the mapping between labels and category
+    target: The target(e.g. race, age, gender)
+    image_path: The path to the image
 out:
-    original pictures
-    annotation heatmaps
+    a single image of object PIL.PngImage
 """
-
-def integrated_grad_pic(model_param_path, image_path, label_path, save_path, target, mapping, size, img_idx_lst):
+def integrated_grad_pic_single(model_param_path, mapping, target, image_path):
     
     model = keras.models.load_model(model_param_path)
     ig = integrated_gradients(model)
@@ -266,40 +259,32 @@ def integrated_grad_pic(model_param_path, image_path, label_path, save_path, tar
         subplot_row = 1
         subplot_col = 2
     
-    for img_idx in img_idx_lst:
-        img_name = "{}.jpg".format(img_idx)
-        sample_path = os.path.join(image_path, img_name)
-        sample_label_df = pd.read_csv(label_path)
-        sample_label = sample_label_df[sample_label_df["file"].str.contains(img_name)][target].values[0]
+    
+    processed_image = resnet_v2.preprocess_input(plt.imread(image_path)).reshape(-1, size, size, 3)
 
-        sample_image = Image.open(sample_path)
-        sample_image.save(os.path.join(save_path, "Original_") + str(img_idx)+".png")
+    exs = []
+    output_prob = model.predict(processed_image).squeeze()
+    for i in range(1, max_iter_range + 1):
+        exs.append(ig.explain(processed_image.squeeze(), outc=i-1))
+    exs = np.array(exs)
 
-        processed_image = resnet_v2.preprocess_input(plt.imread(sample_path)).reshape(-1, size, size, 3)
+    # Plot them
+    th = max(np.abs(np.min(exs)), np.abs(np.max(exs)))
 
-        exs = []
-        output_prob = model.predict(processed_image).squeeze()
-        for i in range(1, max_iter_range + 1):
-            exs.append(ig.explain(processed_image.squeeze(), outc=i-1))
-        exs = np.array(exs)
-
-        # Plot them
-        th = max(np.abs(np.min(exs)), np.abs(np.max(exs)))
-
-        fig = plt.subplots(subplot_row, subplot_col,figsize=(15,15))
-        for i in range(max_iter_range):
-            ex = exs[i]
-            plt.subplot(subplot_row,subplot_col,i+1)
-            plt.imshow(ex[:,:,0], cmap="seismic", vmin=-1*th, vmax=th)
-            plt.xticks([],[])
-            plt.yticks([],[])
-            plt.title("heatmap for {} {} with probability {:.2f}".format(target, mapping_dict[i],output_prob[i]), 
-                      fontsize=10)
-        plt.tight_layout()
-        plt.savefig(os.path.join(save_path,"integrated-viz_") + str(img_idx)+".png")
-        plt.close()
-        print("Ground Truth for {}:".format(img_idx), sample_label)
-        print("Predicted for {}:".format(img_idx), mapping_dict[np.argmax(output_prob)])
+    fig = plt.subplots(subplot_row, subplot_col,figsize=(15,15))
+    for i in range(max_iter_range):
+        ex = exs[i]
+        plt.subplot(subplot_row,subplot_col,i+1)
+        plt.imshow(ex[:,:,0], cmap="seismic", vmin=-1*th, vmax=th)
+        plt.xticks([],[])
+        plt.yticks([],[])
+        plt.title("heatmap for {} {} with probability {:.2f}".format(target, mapping_dict[i],output_prob[i]), 
+                  fontsize=10)
+    plt.tight_layout()
+    fig = plt.gcf()
+    plt.close()
+    img = fig2img(fig)
+    return img
              
 
     

@@ -5,6 +5,7 @@ import dlib
 import numpy as np
 import os
 import sys
+from tensorflow.keras.applications import resnet_v2
 IM_WIDTH = IM_HEIGHT = 198
 
 def rect_to_bb(rect):
