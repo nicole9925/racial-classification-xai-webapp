@@ -9,3 +9,11 @@
     align-items: center;
     justify-content: center;
 }
+.image-container {
+    border-radius: 20px;
+    height: 350px;
+} 
+.pp-img {
+    border-radius: 20px;
+    height: 350px;
+}

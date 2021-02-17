@@ -3,15 +3,16 @@ import Upload from './Upload'
 import './ImageComponent.css'
 
 const ImageComponent = (props) => {
-    const [progress, setProgress] = useState('idle')
+    
+    var progress = props.progress
 
     const content = () => {
-        switch(progress) {
-            case 'idle':
+        switch(progress) {  
+            case 'getUpload':
                 return (
                     <>
                     <div className="upload-container">
-                        <Upload></Upload>
+                        <Upload setProgress={props.setProgress} setData={props.setData} progress={progress}></Upload>
                     </div>
                     </>
                 )
@@ -28,7 +29,7 @@ const ImageComponent = (props) => {
                 return (
                     <>
                     <div className="upload-container">
-                        <Upload></Upload>
+                        <Upload setProgress={props.setProgress} setData={props.setData} progress={progress}></Upload>
                     </div>
                     </>
                 )

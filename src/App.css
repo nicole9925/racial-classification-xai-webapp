@@ -28,6 +28,12 @@ h3 {
   font-size: 1rem;
 }
 
+p {
+  color: white;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
 .box {
   background-color: var(--grey);
   border-radius: var(--radius);
@@ -100,4 +106,5 @@ footer {
   justify-content: center;
   align-items: center;
 }
+
 

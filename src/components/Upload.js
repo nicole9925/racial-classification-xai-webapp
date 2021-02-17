@@ -3,6 +3,7 @@ import ImageUploader from 'react-images-upload'
 import UploadService from './UploadService'
 import CircleLoader from 'react-spinners/CircleLoader'
 import { css } from "@emotion/core";
+import './Upload.css';
 const UploadComponent = props => (
     <form>
         <ImageUploader
@@ -19,9 +20,8 @@ const UploadComponent = props => (
         />
     </form>
 );
-const Upload = () => {
-    
-    const [progress, setProgress] = useState('getUpload');
+const Upload = (props) => {
+
     const [url, setImageUrl] = useState(undefined);
     const [errorMessage, setErrorMessage] = useState('');
     const [img, setImage] = useState(null);
@@ -55,34 +55,20 @@ const Upload = () => {
     }
 
     const submit = async () => {
-        setProgress("Uploading");
+        props.setProgress("Uploading");
         const parts = img[0].split(';');
         const name = parts[1].split('=')[1];
 
         const resp = await UploadService.UploadToServer(img, name)
 
-        // setImageUrl(resp["gen_path"])
-        // setImageUrl(process.env.PUBLIC_URL + `/${resp.gen_path}`)
-        let img_url = await fetch(`/api/display/${resp.name}`, {
-            mode: 'no-cors',
-            method: "get",
-            headers: {
-                 "Content-Type": "application/json"
-            }
-        })
-        // setImageUrl(img_url.url)
-        // console.log(img_url)
-        // setProgress("Uploaded")
-
-        // .then(async () => {
-        //     setImageUrl("done");
-        // })
-        // .catch((err) => {
-        //     console.log(err)
-        // }) 
+        setImageUrl('data:image/jpeg;base64,' + resp.pp_img)
+        props.setProgress('Uploaded')
+        // props.setData(`Race: ${resp.race}\nGender: ${resp.gender}\nAge: ${resp.age}`)
+        props.setData({"race": resp.race, "gender": resp.gender, "age": resp.age})
     }
  
-    const content = () => {
+    const content = (props) => {
+        const progress = props.progress
         switch(progress) {
             case 'getUpload':
                 fetch('/api/clear/')
@@ -98,7 +84,9 @@ const Upload = () => {
             case 'Uploaded':
                 return (
                 <>
-                    {/* <img src={url} alt="Your Image"></img> */}
+                    <div className="image-container">
+                        <img className = "pp-img" src={url} alt="Your Image"></img>
+                    </div>
                 </>
                 )
             case 'uploadError':
@@ -120,7 +108,7 @@ const Upload = () => {
 
     return (
         <div>
-            {content()}
+            {content(props)}
         </div>
     )
 }

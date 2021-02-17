@@ -48,10 +48,5 @@ def detect_face(image_path, default_max_size=800,size = 300, padding = 0.25):
     image = dlib.get_face_chips(img, faces, size=size, padding = padding)[0]
 
     image = Image.fromarray(image, 'RGB')
-    image.save("test1.jpeg")
-    image_arr = image.resize((IM_WIDTH, IM_HEIGHT))
-    
-    image_arr = np.array(image_arr) / 255.0
-    image_arr = image_arr[None,:]
 
-    return image, image_arr
+    return image
