@@ -5,6 +5,7 @@ import dlib
 import numpy as np
 import os
 import sys
+from tensorflow.keras.applications import resnet_v2
 IM_WIDTH = IM_HEIGHT = 198
 
 def rect_to_bb(rect):
@@ -51,7 +52,7 @@ def detect_face(image_path, default_max_size=800,size = 300, padding = 0.25):
     image.save("test1.jpeg")
     image_arr = image.resize((IM_WIDTH, IM_HEIGHT))
     
-    image_arr = np.array(image_arr) / 255.0
+    image_arr = resnet_v2.preprocess_input(np.array(image_arr))
     image_arr = image_arr[None,:]
 
     return image, image_arr
