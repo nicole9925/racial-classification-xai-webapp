@@ -157,7 +157,8 @@ def create_stats(model, generator, target, label_path, mapping_path, save_path):
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
     acc = cm.diagonal()
     result_df["accuracy"] = acc
-    
+    result_df.to_csv(os.path.join(save_path, "result_df.csv"), index = False)
+
     stat_names = ["precision", "recall", "f1-score", "accuracy", "support"]
     
     for name in stat_names:
