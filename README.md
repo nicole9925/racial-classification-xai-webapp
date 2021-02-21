@@ -7,6 +7,7 @@ To run:
 
 1. Run `npm install` to download dependencies
 2. Run `npm start`
-3. Run `pip install python-dotenv` if you do not have python-dotenv.
-4. To start the server, run `python3 src/api/index.py`
+3. Download python dependencies using `pip install -r requirements.txt`
+4. Run `pip install python-dotenv` if you do not have python-dotenv.
+5. To start the server, run `python3 src/api/index.py`
 
