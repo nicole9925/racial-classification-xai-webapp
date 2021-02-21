@@ -1,5 +1,7 @@
 .background-container {
     margin: 1em;
+    height: auto;
+    overflow: scroll;
 }
 .results-container {
     margin: 5em;

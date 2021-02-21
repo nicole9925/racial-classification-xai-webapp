@@ -89,6 +89,9 @@ body {
 .info-widget {
   height: 40%;
   width: 20rem;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
 }
 
 .stats-container {
@@ -101,11 +104,15 @@ body {
 .stats-widget1 {
   height:46%;
   width: 20rem;
+  flex-direction: column;
+  overflow: scroll;
 }
 
 .stats-widget2 {
   height: 46%;
   width: 20rem;
+  flex-direction: column;
+  overflow: scroll;
 }
 
 .interactive-container {

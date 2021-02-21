@@ -24,7 +24,7 @@ function Home() {
     <div className="main-container">
       <div className="text-container">
         <div className="info-widget box">
-        <Info data={data} progress={progress}></Info>
+          <Info data={data} progress={progress}></Info>
           </div>
           <div className="stats-container">
             <div className="stats-widget1 box">
@@ -64,9 +64,6 @@ function Home() {
         </div>
       </div>
     </div>
-    {/* <footer>
-      
-    </footer> */}
     </>
   );
 }
