@@ -1,2 +1,4 @@
 node_modules/*
+static/generated_images/*
+static/uploads/*
 

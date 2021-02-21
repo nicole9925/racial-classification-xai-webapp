@@ -69,18 +69,10 @@ body {
   padding: 1%;
 } */
 
-footer {
-  background-color: var(--secondary);
-  height: 2rem;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-}
-
 /* || MAIN BODY */
 .main-container {
   width: 100%;
-  height: 100%;
+  height: 80vh;
   margin-top: 2%;
   display: flex;
   flex-direction: row;
@@ -95,41 +87,43 @@ footer {
 }
 
 .info-widget {
-  height: 23.3rem;
+  height: 40%;
   width: 20rem;
 }
 
 .stats-container {
   display: flex;
   flex-direction: column;
-  height: 29rem;
+  height: 52%;
   justify-content: space-between;
 }
 
 .stats-widget1 {
-  height: 14rem;
+  height:46%;
   width: 20rem;
 }
 
 .stats-widget2 {
-  height: 14rem;
+  height: 46%;
   width: 20rem;
 }
 
 .interactive-container {
   display: flex;
   flex-direction: column;
-  height: 54rem;
+  height: 100%;
   width: 50rem;
+  justify-content: space-between;
 }
 
 .guide-container {
-  height: 6rem;
+  height: 20%;
   width: 100%;
+  /* border: 1px white solid; */
 }
 .image-upload-widget {
   background-color: var(--primary);
-  height: 48rem;
+  height: 80%;
   width: 50rem;
   display:flex;
   justify-content: center;
