@@ -15,8 +15,9 @@ const UploadComponent = props => (
             onChange={props.onImage}
             imgExtension={['.jpg', '.png', '.jpeg']}
             withPreview={true}
-            fileContainerStyle={{backgroundColor: '#2A323F', color: '#ffffff'}}
-            buttonStyles = {{backgroundColor: '#4C6074'}}
+            labelStyles = {{color: '#ffffff'}}
+            fileContainerStyle={{backgroundColor: 'var(--primary)', padding: '20px'}}
+            buttonStyles = {{backgroundColor: 'var(--highlight)'}}
         />
     </form>
 );
@@ -46,7 +47,7 @@ const Upload = (props) => {
         
         return(
             <CircleLoader 
-            color={'#8230E9'}
+            color={'#80D8FF'}
             loading={true}
             size={150}
             css={override}
@@ -63,8 +64,9 @@ const Upload = (props) => {
 
         setImageUrl('data:image/jpeg;base64,' + resp.pp_img)
         props.setProgress('Uploaded')
-        // props.setData(`Race: ${resp.race}\nGender: ${resp.gender}\nAge: ${resp.age}`)
         props.setData({"race": resp.race, "gender": resp.gender, "age": resp.age})
+        props.setPlotData1({"title": "Race Prediction", "data": resp.race_results, "colors": ["#9900ff", "#00ccff"]})
+        props.setPlotData2({"title": "Age Prediction", "data": resp.age_results, "colors": ["#ff4aa7", "#e04646"]})
     }
  
     const content = (props) => {
@@ -85,7 +87,7 @@ const Upload = (props) => {
                 return (
                 <>
                     <div className="image-container">
-                        <img className = "pp-img" src={url} alt="Your Image"></img>
+                        <img className = "pp-img" src={url} alt="Your Face"></img>
                     </div>
                 </>
                 )
@@ -95,7 +97,7 @@ const Upload = (props) => {
                         <div className="error-message">{errorMessage}</div>
                         <div className="upload-container">
                             <UploadComponent onImage={onImage} url={url} />
-                            <button className="submit" onClick={submit}>Submit</button>
+                            <button className="submit" onClick={submit} disabled={disableButton}>Submit</button>
                         </div>
                     </>
                 )

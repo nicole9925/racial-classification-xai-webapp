@@ -1,7 +1,10 @@
 /* || DEFINE VARIABLES */
 :root {
-  --navy: #111B27;
-  --grey: #2A323F;
+  --primary: #070714;
+  --secondary: #1A1939;
+  --dimmed:#40406B;
+  --highlight: #4357FE;
+  --submit: #2829C7;
 
   --radius: 20px;
 
@@ -11,7 +14,7 @@
 /* || TYPOGRAPHY */
 
 html {
-  background: var(--navy);
+  background: var(--primary);
   font-family: var(--font);
 }
 
@@ -28,6 +31,19 @@ h3 {
   font-size: 1rem;
 }
 
+h4 {
+  color: white;
+  font-weight: 100;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+h5 {
+  color: white;
+  font-weight: 100;
+  font-size: 0.8rem;
+}
+
 p {
   color: white;
   font-size: 0.8rem;
@@ -35,7 +51,7 @@ p {
 }
 
 .box {
-  background-color: var(--grey);
+  background-color: var(--secondary);
   border-radius: var(--radius);
 }
 /* || STATIC ENTITIES */
@@ -48,13 +64,13 @@ body {
   margin: 0;
 }
 
-.page-title {
-  margin-left: 3%;
+/* .page-title {
+  margin-left: 5%;
   padding: 1%;
-}
+} */
 
 footer {
-  background-color: var(--grey);
+  background-color: var(--secondary);
   height: 2rem;
   width: 100%;
   position: absolute;
@@ -65,10 +81,11 @@ footer {
 .main-container {
   width: 100%;
   height: 100%;
+  margin-top: 2%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .text-container {
@@ -78,33 +95,61 @@ footer {
 }
 
 .info-widget {
-  height: 20rem;
-  width: 31rem;
+  height: 23.3rem;
+  width: 20rem;
 }
 
 .stats-container {
   display: flex;
-  flex-direction: row;
-  width: 500px;
+  flex-direction: column;
+  height: 29rem;
   justify-content: space-between;
 }
 
 .stats-widget1 {
-  height: 19rem;
-  width: 15rem;
+  height: 14rem;
+  width: 20rem;
 }
 
 .stats-widget2 {
-  height: 19rem;
-  width: 15rem;
+  height: 14rem;
+  width: 20rem;
 }
 
+.interactive-container {
+  display: flex;
+  flex-direction: column;
+  height: 54rem;
+  width: 50rem;
+}
+
+.guide-container {
+  height: 6rem;
+  width: 100%;
+}
 .image-upload-widget {
-  height: 40rem;
-  width: 31rem;
+  background-color: var(--primary);
+  height: 48rem;
+  width: 50rem;
   display:flex;
   justify-content: center;
   align-items: center;
+  /* border: 1px white solid; */
+}
+.guide-bounding {
+  margin: 1em;
+}
+.guide {
+  color: white;
+  padding: 1em;
 }
 
+.graph-box {
+  margin: 1em;
+}
 
+/* || ATTRIBUTES */
+.submit:disabled {
+  background-color: #444452;
+  color: grey;
+}

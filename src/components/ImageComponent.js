@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Upload from './Upload'
 import './ImageComponent.css'
 
@@ -12,24 +12,23 @@ const ImageComponent = (props) => {
                 return (
                     <>
                     <div className="upload-container">
-                        <Upload setProgress={props.setProgress} setData={props.setData} progress={progress}></Upload>
+                        <Upload setProgress={props.setProgress} 
+                                setData={props.setData} 
+                                setPlotData1={props.setPlotData1}
+                                setPlotData2={props.setPlotData2} 
+                                progress={progress}></Upload>
                     </div>
                     </>
-                )
-            case 'loading':
-                return ( <>
-                </>
-                )
-            case 'display':
-                return (
-                    // showImage()
-                    <div>Image</div>
                 )
             default:
                 return (
                     <>
                     <div className="upload-container">
-                        <Upload setProgress={props.setProgress} setData={props.setData} progress={progress}></Upload>
+                        <Upload setProgress={props.setProgress} 
+                                setData={props.setData}
+                                setPlotData1={props.setPlotData1} 
+                                setPlotData2={props.setPlotData2} 
+                                progress={progress}></Upload>
                     </div>
                     </>
                 )

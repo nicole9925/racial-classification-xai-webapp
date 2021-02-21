@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 // import background from '../text_data/background'
 import './Info.css'
 
@@ -33,14 +33,27 @@ const Info = (props) => {
                     </>
                 )
             case 'Uploaded':
-                props.setTitle('Results');
                 return ( <>
                 <div className="results-container">
-                    <h3>Race: {background["race"]}</h3>
-                    <br />
-                    <h3>Gender: {background["gender"]}</h3>
-                    <br />
-                    <h3>Age: {background["age"]}</h3>
+                    <h3><strong>OUR GUESSES:</strong></h3>
+                    <div className="results">
+                        <h5><b>Race:</b></h5>
+                        <h5>{background["race"]}</h5>
+                    </div>
+                    <div className="results">
+                        <h5><b>Gender:</b></h5>
+                        <h5>{background["gender"]}</h5>
+                    </div>
+                    <div className="results">
+                        <h5><b>Age:</b></h5>
+                        <h5>{background["age"]}</h5>
+                    </div>
+                </div>
+                </>
+                )
+            case 'Input':
+                return ( <>
+                <div className="correction-container">
                 </div>
                 </>
                 )
