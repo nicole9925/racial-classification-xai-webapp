@@ -7,5 +7,6 @@ To run:
 
 1. Run `npm install` to download dependencies
 2. Run `npm start`
-3. To start the server, run `flask run`
+3. Run `pip install python-dotenv` if you do not have python-dotenv.
+4. To start the server, run `flask run`
 
