@@ -57,7 +57,7 @@ def fileUpload():
     im.save(filename)
 
     # Preprocess image, make predictions
-    gen_path, image_encoded, image = preprocess(filename)
+    _, image_encoded, image = preprocess(filename)
     race, gender, age, race_results, gender_results, age_results = predict(image)
 
     # Formulate Response
