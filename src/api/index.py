@@ -4,8 +4,6 @@ from werkzeug.utils import secure_filename
 # from app import app
 import os
 import sys
-import logging
-from flask_cors import CORS, cross_origin
 from PIL import Image
 import base64
 from io import BytesIO

@@ -1,0 +1,9 @@
+Flask
+cython
+cmake
+dlib
+tensorflow
+Keras
+opencv-python
+urllib3
+Pillow
