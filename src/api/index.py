@@ -16,6 +16,7 @@ import tensorflow as tf
 from tensorflow.keras.applications.resnet_v2 import preprocess_input
 import cv2
 from werkzeug.exceptions import HTTPException
+from util import *
 
 UPLOAD_FOLDER = 'static/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -59,6 +60,7 @@ def fileUpload():
     # Preprocess image, make predictions
     _, image_encoded, image = preprocess(filename)
     race, gender, age, race_results, gender_results, age_results = predict(image)
+    race_ig, gender_ig, age_ig = generate_integrated_grad(image)
 
     # Formulate Response
     data = {"pp_img": image_encoded, 
@@ -67,7 +69,10 @@ def fileUpload():
             "age": age,
             "race_results": race_results,
             "gender_results": gender_results,
-            "age_results": age_results
+            "age_results": age_results, 
+            "race_ig": race_ig,
+            "gender_ig": gender_ig,
+            "age_ig": age_ig
             }
     resp = app.response_class(
     status=200,
@@ -128,6 +133,12 @@ def predict(image):
  
 
     return race, gender, age, race_results, gender_results, age_results
+
+def generate_integrated_grad(image):
+    race = encode_image(integrated_grad_PIL(image, "race"))
+    gender = encode_image(integrated_grad_PIL(image, "gender"))
+    age = encode_image(integrated_grad_PIL(image, "age"))
+    return race, gender, age
 
 def encode_image(image):
     """

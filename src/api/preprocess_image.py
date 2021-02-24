@@ -19,7 +19,7 @@ def rect_to_bb(rect):
 	# return a tuple of (x, y, w, h)
 	return (x, y, w, h)
 
-def detect_face(image_path, default_max_size=800,size = 300, padding = 0.25):
+def detect_face(image_path, default_max_size=800,size = 224, padding = 0.25):
     cnn_face_detector = dlib.cnn_face_detection_model_v1('models/mmod_human_face_detector.dat')
     sp = dlib.shape_predictor('models/shape_predictor_5_face_landmarks.dat')
     base = 2000  # largest width and height

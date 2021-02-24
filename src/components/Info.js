@@ -1,6 +1,6 @@
 import React from 'react'
-// import background from '../text_data/background'
 import './Info.css'
+import modelInfo from '../text_data/modelInfo'
 
 const Info = (props) => {
     var progress = props.progress;
@@ -57,11 +57,20 @@ const Info = (props) => {
                 </div>
                 </>
                 )
+            case 'Analysis':
+                return ( <>
+                    <div className="background-container">
+                        <h3>{modelInfo.modelInfo[1]["header"]}</h3>
+                        <p>{modelInfo.modelInfo[1]["body"]}</p>
+
+                        <h3>{modelInfo.modelInfo[2]["header"]}</h3>
+                        <p>{modelInfo.modelInfo[2]["body"]}</p>
+                    </div>
+                </>
+                )
             default:
                 return (
                     <>
-                    <div className="background-container">
-                    </div>
                     </>
                 )
         }

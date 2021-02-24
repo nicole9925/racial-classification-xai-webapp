@@ -17,3 +17,19 @@
     border-radius: 20px;
     height: 350px;
 }
+
+.loader {
+    display: block;
+    margin-left: 0px;
+}
+
+
+.image-container-ig {
+    border-radius: 20px;
+    height: 250px;
+} 
+
+.ig-container {
+    display: flex;
+    flex-direction: row;
+}

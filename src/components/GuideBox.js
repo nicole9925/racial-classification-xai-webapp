@@ -8,13 +8,12 @@ const GuideBox = (props) => {
     const [submitDisabled, setSubmitDisabled] = useState(true);
 
     const submitForm  = async (e) => {
-        console.log("here")
         e.preventDefault()
         if (expected === 'Yes') {
             props.setProgress('Analysis')
+            console.log(props.progress)
         } else if (expected === 'No') {
             props.setProgress('Input')
-            console.log("here")
         }
     }
     
@@ -58,6 +57,13 @@ const GuideBox = (props) => {
                 </>
                 )
             case 'Input':
+                return ( <>
+                    <div className="guide-bounding">
+                        <Guide key = {props.progress} className="guide" progress={props.progress}></Guide>
+                    </div>
+                </>
+                )
+            case 'Analysis':
                 return ( <>
                     <div className="guide-bounding">
                         <Guide key = {props.progress} className="guide" progress={props.progress}></Guide>

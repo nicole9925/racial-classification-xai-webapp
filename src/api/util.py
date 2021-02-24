@@ -20,6 +20,9 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 import io
+import matplotlib
+
+matplotlib.use('Agg')
 
 
 """
@@ -253,23 +256,27 @@ out:
 """
 def integrated_grad_PIL(PIL_img, target, lookup = None):
     if target == "race":
-        model_path = "./models/race/race_v6.hdf5"
+        model_path = "models/race_v6.hdf5"
+        mapping_dict_rev = {0: 'Black', 1: 'East Asian', 2: 'Latino/Hispanic', 3: 'Indian', 4: 'Middle Eastern', 5: 'SE Asian', 6: 'White'}
     elif target == "age":
-        model_path = "./models/age/age_v1.hdf5"
+        model_path = "models/age_v1.hdf5"
+        mapping_dict_rev = {0: "0-2", 1: "10-19", 2: "20-29", 3: "3-9", 4: "30-39", 5: "40-49", 6: "50-59", 7: "60-69", 8: "more than 70"}
     else:
-        model_path = "./models/gender/gender_v1.hdf5"
-        
+        model_path = "models/gender_v1.hdf5"
+        mapping_dict_rev = {0: "Female", 1: "Male"}
+
+    mapping_dict = {v: k for k, v in mapping_dict_rev.items()}
     model = keras.models.load_model(model_path)
     ig = integrated_gradients(model)
 
-    mapping = os.path.join("./mapping", target + ".json")
-    with open(mapping) as f:
-        mapping_dict = json.load(f)
-    f.close()
+    # mapping = os.path.join("./mapping", target + ".json")
+    # with open(mapping) as f:
+    #     mapping_dict = json.load(f)
+    # f.close()
 
-    mapping_dict = {key.lower():val for key, val in mapping_dict.items()}
-    mapping_dict_rev = {val:key for key, val in mapping_dict.items()}
-    
+    # mapping_dict = {key.lower():val for key, val in mapping_dict.items()}
+    # mapping_dict_rev = {val:key for key, val in mapping_dict.items()}
+
     ############################THIS LINE IS IMPORTANT!!!!#################################
     PIL_img = resnet_v2.preprocess_input(np.array(PIL_img)[None,:]) ##IMPORTANT!!!
     output_prob = model.predict(PIL_img).squeeze()
@@ -281,7 +288,7 @@ def integrated_grad_PIL(PIL_img, target, lookup = None):
         lookup = lookup.lower()
         pred_idx = mapping_dict[lookup]
 
-    ex = ig.explain(processed_image.squeeze(), outc=pred_idx)
+    ex = ig.explain(PIL_img.squeeze(), outc=pred_idx)
 
     th = max(np.abs(np.min(ex)), np.abs(np.max(ex)))
 
@@ -292,7 +299,8 @@ def integrated_grad_PIL(PIL_img, target, lookup = None):
     
     fig = plt.gcf()
     im = fig2img(fig)
-
+    if im.mode in ("RGBA", "P"):
+        im = im.convert("RGB")
     return im
              
 
