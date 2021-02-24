@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import ImageUploader from 'react-images-upload'
 import UploadService from './UploadService'
 import CircleLoader from 'react-spinners/CircleLoader'
-import { css } from "@emotion/core";
+// import { css } from "@emotion/core";
 import './Upload.css';
 const UploadComponent = props => (
     <form>
@@ -40,17 +40,17 @@ const Upload = (props) => {
     }
 
     const loading = () => {
-        const override = css`
-        display: block;
-        margin-left: 0px;
-        `;
+        // const override = css`
+        // display: block;
+        // margin-left: 0px;
+        // `;
         
         return(
             <CircleLoader 
             color={'#80D8FF'}
             loading={true}
             size={150}
-            css={override}
+            // css={override}
             />
         )
     }
