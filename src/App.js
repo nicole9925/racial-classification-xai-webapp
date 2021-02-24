@@ -10,7 +10,6 @@ import accuracy from './text_data/accuracy'
 
 function Home() {
 
-  console.log(accuracy.biased)
   const [progress, setProgress] = useState('getUpload');
   const [data, setData] = useState(background)
   const [plotData1, setPlotData1] = useState(accuracy.unbiased)
