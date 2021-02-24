@@ -19,7 +19,7 @@ const guide =  {"getUpload": {
     "eraseDelay": 10000000,
     "typingDelay": 100,
     "eraseSpeed": 30},
-"Analysis": {"text": "Here is what our model focused on with respect to your predicted outcomes.", 
+"Analysis": {"text": "Here is what our model focused on with respect to our predictions.", 
 "speed": 20,
 "eraseDelay": 10000000,
 "typingDelay": 100,
