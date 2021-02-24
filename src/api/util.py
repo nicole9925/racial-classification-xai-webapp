@@ -228,63 +228,72 @@ def fig2img(fig):
     return img
 
 """
-Function similar to integrated_grad_pic but just do it on one image
+Another version of integrated_grad implementation that just shows the heatmap with the highest
+predictive accuracy
 
-modification: the returned output is an image. This function no longer save the image into jpg.
+NOTE: Before running this, Make sure you:
+    1. Called Detect_face to crop the image only(WITHOUT USING Resnet Preprocessing)
+    2. You should call resnet preprocessing unit INSIDE this function because
+       the PIL.fromarray CANNOT take in float32 data type
+       
+   ALSO: Make sure you'd changed the model path and mapping path so that the function can run.
 
 in: 
-    model_param_path: saved model in .hdf5 format
-    mapping: The dictionary object of the mapping between labels and category
-    target: The target(e.g. race, age, gender)
-    image_path: The path to the image
+    PIL_img: a PIL_img object PIL.Image.Image
+    
+    target: the target(e.g. race, age, gender)
+    
+    lookup: The particular category to lookup. For instance, given target = race, lookup = None
+            would display the heatmap with the highest probability. But if lookup = "white",
+            the function would display the heatmap with "white" category even if the category
+            does have have the highest probability.
+   
 out:
-    a single image of object PIL.PngImage
+    a single image of object PIL.PngImagePlugin.PngImageFile
 """
-def integrated_grad_pic_single(model_param_path, mapping, target, image_path):
-    
-    model = keras.models.load_model(model_param_path)
+def integrated_grad_PIL(PIL_img, target, lookup = None):
+    if target == "race":
+        model_path = "./models/race/race_v6.hdf5"
+    elif target == "age":
+        model_path = "./models/age/age_v1.hdf5"
+    else:
+        model_path = "./models/gender/gender_v1.hdf5"
+        
+    model = keras.models.load_model(model_path)
     ig = integrated_gradients(model)
-    
+
+    mapping = os.path.join("./mapping", target + ".json")
     with open(mapping) as f:
         mapping_dict = json.load(f)
     f.close()
+
+    mapping_dict = {key.lower():val for key, val in mapping_dict.items()}
+    mapping_dict_rev = {val:key for key, val in mapping_dict.items()}
     
-    mapping_dict = {val:key for key, val in mapping_dict.items()}
+    ############################THIS LINE IS IMPORTANT!!!!#################################
+    PIL_img = resnet_v2.preprocess_input(np.array(PIL_img)[None,:]) ##IMPORTANT!!!
+    output_prob = model.predict(PIL_img).squeeze()
+    pred_idx = output_prob.argmax()
     
-    max_iter_range = len(mapping_dict)
-    if target == "age" or target == "race":
-        subplot_row = 3
-        subplot_col = 3
+    if lookup == None:
+        pass
     else:
-        subplot_row = 1
-        subplot_col = 2
+        lookup = lookup.lower()
+        pred_idx = mapping_dict[lookup]
+
+    ex = ig.explain(processed_image.squeeze(), outc=pred_idx)
+
+    th = max(np.abs(np.min(ex)), np.abs(np.max(ex)))
+
+    plt.figure(figsize = (6, 6))
+    plt.imshow(ex[:,:,0], cmap="seismic", vmin=-1*th, vmax=th)
+    plt.title("heatmap for {} {} with probability {:.2f}".format(target, mapping_dict_rev[pred_idx],
+                                                                 output_prob[pred_idx]), fontsize=12)
     
-    
-    processed_image = resnet_v2.preprocess_input(plt.imread(image_path)).reshape(-1, size, size, 3)
-
-    exs = []
-    output_prob = model.predict(processed_image).squeeze()
-    for i in range(1, max_iter_range + 1):
-        exs.append(ig.explain(processed_image.squeeze(), outc=i-1))
-    exs = np.array(exs)
-
-    # Plot them
-    th = max(np.abs(np.min(exs)), np.abs(np.max(exs)))
-
-    fig = plt.subplots(subplot_row, subplot_col,figsize=(15,15))
-    for i in range(max_iter_range):
-        ex = exs[i]
-        plt.subplot(subplot_row,subplot_col,i+1)
-        plt.imshow(ex[:,:,0], cmap="seismic", vmin=-1*th, vmax=th)
-        plt.xticks([],[])
-        plt.yticks([],[])
-        plt.title("heatmap for {} {} with probability {:.2f}".format(target, mapping_dict[i],output_prob[i]), 
-                  fontsize=10)
-    plt.tight_layout()
     fig = plt.gcf()
-    plt.close()
-    img = fig2img(fig)
-    return img
+    im = fig2img(fig)
+
+    return im
              
 
     
