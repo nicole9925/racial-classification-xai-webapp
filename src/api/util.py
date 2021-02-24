@@ -11,7 +11,6 @@ from tensorflow.keras import Sequential
 from IntegratedGradients import *
 import json
 from tensorflow import keras
-#from tensorflow.keras.applications.xception import preprocess_input
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from PIL import Image
 from tensorflow.keras.applications import resnet_v2
@@ -23,6 +22,7 @@ import io
 import matplotlib
 
 matplotlib.use('Agg')
+from model_trans import *
 
 
 """
@@ -229,6 +229,25 @@ def fig2img(fig):
     buf.seek(0)
     img = Image.open(buf)
     return img
+
+"""
+functions to load the model with weights
+
+in: weight_name of the checkpoint
+out: the model loaded with weights
+"""
+def load_model_with_weights(weight_name):
+    if "age" in weight_name:
+        num_classes = 9
+    elif "race" in weight_name:
+        num_classes = 7
+    else:
+        num_classes = 2
+    
+    model = build_model(num_classes = num_classes)
+    model.load_weights(weight_name)
+    
+    return model
 
 """
 Another version of integrated_grad implementation that just shows the heatmap with the highest
